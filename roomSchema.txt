@@ -1,0 +1,12 @@
+const roomSchema = new Schema({
+    title: { type: String, required: true, validate: titleValidators },
+    body: { type: String/*, required: true, validate: bodyValidators */},
+    img: { type: String },
+    isBooked: { type: Boolean, default: false },
+    bookedBy: { type: String },
+    price: {type: Number, required: true}
+    // comments: [{
+    //   comment: { type: String, validate: commentValidators },
+    //   commentator: { type: String }
+    // }]
+  });

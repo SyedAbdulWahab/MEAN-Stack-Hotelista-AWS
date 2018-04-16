@@ -1,0 +1,99 @@
+<h1 class="page-header">Hotel Rooms</h1>
+
+<!-- Custom Success/Error Message -->
+<div class="row show-hide-message" *ngIf="message">
+  <div [ngClass]="messageClass">
+    {{ message }}
+  </div>
+</div>
+
+<!-- Reload Button -->
+<button [disabled]="loadingRooms" type="button" name="button" class="btn btn-default" (click)="reloadRooms()">
+  <span class="glyphicon glyphicon-repeat"></span>&nbsp;&nbsp;Reload</button>
+
+<br />
+<br />
+
+<!-- Panel Start -->
+<div>
+  <!-- Panel Outer Layer -->
+  <div class="panel panel-primary" *ngFor="let room of roomPosts">
+
+    <!-- Panel Title -->
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ room.title }}</h3>
+    </div>
+
+    <!-- Panel Body -->
+    <div class="panel-body">
+      {{ room.body }}
+
+      Price: {{room.price}}
+    </div>
+
+    <!-- Panel Footer Start -->
+    <div class="panel-footer">
+      <br />
+
+      <!-- Book Button -->
+      <button *ngIf="room.isBooked !== true" type="button" name="button" class="btn btn-sm btn-success" (click)="BookRoom(room._id)">Book Room</button>
+    </div>
+    <!-- Panel Footer End -->
+    <!-- Post Comment Box: Start -->
+    <!-- <ul class="list-group"> -->
+    <!-- <li class="list-group-item"> -->
+    <!-- Post Comment Button -->
+    <!-- <button type="button" name="button" class="btn btn-sm btn-danger" (click)="draftComment(blog._id)" [disabled]="newComment.indexOf(blog._id) > -1">Post Comment</button> -->
+    <!-- <br /> -->
+    <!-- <br /> -->
+    <!-- <div *ngIf="newComment.indexOf(blog._id) > -1"> -->
+
+    <!-- Form: Comment Form Start -->
+    <!-- <form [formGroup]="commentForm"> -->
+    <!-- Textarea Input -->
+    <!-- <textarea name="comment" rows="10" cols="30" class="form-control" formControlName="comment"></textarea> -->
+    <!-- Validation -->
+    <!-- <div [ngClass]="{'has-success': !commentForm.controls.comment.errors && commentForm.controls.comment.dirty, 'has-error': commentForm.controls.comment.dirty && commentForm.controls.comment.errors}"> -->
+    <!-- <ul class="help-block"> -->
+    <!-- <li *ngIf="commentForm.controls.comment.errors?.required && commentForm.controls.comment.dirty">This field is required.</li> -->
+    <!-- <li *ngIf="(commentForm.controls.comment.errors?.maxlength && commentForm.controls.comment.dirty) ||(commentForm.controls.comment.errors?.minlength && commentForm.controls.comment.dirty)">Comment must be at least 1 character but no more than 200.</li> -->
+    <!-- </ul> -->
+    <!-- </div> -->
+    <!-- Post Button -->
+    <!-- <button [disabled]="!commentForm.valid || processing" type="submit" name="button" class="btn btn-sm btn-info" (click)="postComment(blog._id)">Post</button> -->
+    <!-- Cancel Button -->
+    <!-- <button [disabled]="processing" type="button" name="button" class="btn btn-sm btn-danger" (click)="cancelSubmission(blog._id)">Cancel</button> -->
+    <!-- </form> -->
+    <!-- Form: Comment Form End -->
+
+    <!-- </div> -->
+
+    <!-- Show Comments -->
+    <!-- <li *ngIf="enabledComments.indexOf(blog._id) === -1 && blog.comments.length > 0" class="list-group-item"> -->
+    <!-- <span (click)="expand(blog._id)"> -->
+    <!-- Show comments&nbsp;&nbsp; -->
+    <!-- <div class="glyphicon glyphicon-comment"></div> -->
+    <!-- </span> -->
+    <!-- </li> -->
+
+    <!-- Hide Comments -->
+    <!-- <li *ngIf="enabledComments.indexOf(blog._id) > -1" class="list-group-item"> -->
+    <!-- <span (click)="collapse(blog._id)"> -->
+    <!-- Hide Comments&nbsp;&nbsp; -->
+    <!-- <div class="glyphicon glyphicon-comment"></div> -->
+    <!-- </span> -->
+    <!-- </li> -->
+
+    <!-- Comment -->
+    <!-- <div *ngIf="enabledComments.indexOf(blog._id) > -1"> -->
+    <!-- <li *ngFor="let comment of blog.comments" class="list-group-item"> -->
+    <!-- <strong>{{ comment.commentator }}:</strong> {{ comment.comment }} -->
+    <!-- </li> -->
+    <!-- </div> -->
+    <!-- </ul> -->
+    <!-- Post Comment Box: End -->
+
+  </div>
+  <!-- Panel Outer Layer -->
+</div>
+<!-- Panel End -->

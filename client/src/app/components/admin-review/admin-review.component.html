@@ -1,0 +1,48 @@
+<h1 class="page-header">Reviews</h1>
+
+<!-- Custom Success/Error Message -->
+<div class="row show-hide-message" *ngIf="message && newPost">
+  <div [ngClass]="messageClass">
+    {{ message }}
+  </div>
+</div>
+
+<!-- Reload Button -->
+<button [disabled]="loadingBlogs" type="button" name="button" class="btn btn-default" *ngIf="!newPost" (click)="reloadBlogs()">
+  <span class="glyphicon glyphicon-repeat"></span>&nbsp;&nbsp;Reload</button>
+
+<br />
+<br />
+
+<!-- Panel Start -->
+<div *ngIf="!newPost">
+  <!-- Panel Outer Layer -->
+  <div *ngFor="let blog of blogPosts">
+    <div  class="panel panel-primary" *ngIf="blog.title === blog.createdBy">
+      <!-- Panel Title -->
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ blog.title }}</h3>
+      </div>
+
+      <!-- Panel Body -->
+      <div class="panel-body">
+        {{ blog.body }}
+      </div>
+
+      <!-- Panel Footer Start -->
+      <div class="panel-footer">
+        <!-- <strong>Posted by: </strong>{{ blog.createdBy }} -->
+        <br />
+        <strong>Date: </strong>{{ blog.createdAt | date:'MMM dd, yyyy' }}
+        <br />
+        <!-- Delete Button -->
+        <a [routerLink]="['/delete-blog/', blog._id]" ><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
+
+      </div>
+      <!-- Panel Footer End -->
+
+    </div>
+  </div>
+  <!-- Panel Outer Layer -->
+</div>
+<!-- Panel End -->

@@ -1,0 +1,68 @@
+<h1 class="page-header">Edit Room</h1>
+
+<!-- Custom Success/Error Message -->
+<div class="row show-hide-message" *ngIf="message">
+  <div [ngClass]="messageClass">
+    {{ message }}
+  </div>
+</div>
+
+<!-- Edit Room Form -->
+<form (submit)="updateRoomSubmit()" *ngIf="!loading">
+  <!-- Title Field -->
+  <div class="form-group">
+    <label for="title">Title</label>
+    <!-- Title Input -->
+    <input [disabled]="processing" type="text" name="title" placeholder="*Room Title" class="form-control" [(ngModel)]="room.title"
+      #title="ngModel" />
+  </div>
+
+  <!-- Body Field -->
+  <div class="form-group">
+    <label for="body">Body</label>
+    <!-- Body Input -->
+    <textarea [disabled]="processing" name="body" rows="8" cols="80" [(ngModel)]="room.body" #body="ngModel" class="form-control"
+      placeholder="*Room Body"></textarea>
+  </div>
+
+  <!-- Price Input -->
+  <div class="form-group">
+    <label for="price">Price: </label>
+    <!-- Price Input -->
+    <input type="number" min="1" step="any" name="price" placeholder="$" [(ngModel)]="room.price" #price="ngModel" class="form-control"
+    />
+  </div>
+
+
+  <!-- Room Type Input -->
+  <div class="form-group">
+    <label for="roomType">Room Type: </label>
+    <select class="form-control" [(ngModel)]="selectedRt" #roomType="ngModel" name="roomType">
+      <option  value="Single Room">Single Room</option>
+      <option  value="Double Room">Double Room</option>
+      <option  value="Suite">Suite</option>
+    </select>
+  </div>
+
+
+  <!-- Availability Input -->
+  <div class="form-group">
+    <label for="avail">Availability: </label>
+    <select name="avail" class="form-control" #available = "ngModel" [(ngModel)]="selectedAvail">
+      <option  value="yes">Yes</option>
+      <option  value="no">No</option>
+    </select>
+  </div>
+
+
+
+  <!-- Delete Button -->
+  <a [routerLink]="['/delete-room/', room._id ]">
+    <button [disabled]="processing" type="button" name="button" class="btn btn-danger">Delete</button>
+  </a>
+  <!-- Go Back Button -->
+  <button [disabled]="processing" type="button" name="button" class="btn btn-success" (click)="goBack()">Go Back</button>
+  <!-- Save Changes Button -->
+  <button [disabled]="processing || (!title.dirty && !body.dirty)" type="submit" name="save" class="btn btn-info">Save Changes</button>
+
+</form>

@@ -1,0 +1,42 @@
+
+        <!-- Custom Success/Error Message -->
+        <div class="row show-hide-message" *ngIf="message">
+            <div [ngClass]="messageClass">
+              {{ message }}
+            </div>
+          </div>
+
+<!-- Modal Confirmation Window -->
+<div class="col-md-6">
+  <!-- Model Outer Layer -->
+  <div class="modal-content">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <!-- Close Button -->
+      <button type="button" name="button" class="close" data-dismiss="modal">&times;</button>
+      <!-- Modal Title -->
+      <h4 class="modal-title">Rate the Hotel</h4>
+    </div>
+
+    <!-- Modal Body -->
+    <form (submit)="onRatingFormSubmit()">
+      <div class="modal-body">
+        <p>Please rate the hotel on a scale of 1 to 5.</p>
+        <rating name="rating" [(ngModel)]="rate" [required]="true">
+        </rating>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+
+        <br/>
+        <br/>
+        <!-- Submit Button -->
+        <button type="submit" name="button" class="btn btn-success" (click)="onRatingFormSubmit()">Submit</button>
+        <!-- No Button -->
+        <!-- <a routerLink="/blog"><button [disabled]="processing" type="button" name="button" class="btn btn-danger">No</button></a> -->
+      </div>
+    </form>
+  </div>
+  <br />
+</div>

@@ -1,0 +1,41 @@
+<h1 class="page-header">Users</h1>
+
+<!-- Custom Success/Error Message  || *ngIf="message && newPost" || -->
+<div class="row show-hide-message" *ngIf="message">
+  <div [ngClass]="messageClass">
+    {{ message }}
+  </div>
+</div>
+
+<!-- Reload Button -->
+<button [disabled]="loadingUsers" type="button" name="button" class="btn btn-default" (click)="reloadUsers()">
+  <span class="glyphicon glyphicon-repeat"></span>&nbsp;&nbsp;Reload</button>
+
+<br />
+<br />
+
+<!-- Panel Start -->
+<div>
+  <!-- Panel Outer Layer -->
+  <div *ngFor="let user of userPosts">
+    <div  class="panel panel-primary">
+      <!-- Panel Title -->
+      <div class="panel-heading">
+      </div>
+
+      <!-- Panel Body -->
+      <div class="panel-body">
+        {{ user.username }}
+        <br>
+        {{ user.email }}
+      </div>
+
+      <!-- Panel Footer Start -->
+      <div class="panel-footer">
+         <!-- Delete Button -->
+        <a [routerLink]="['/delete-user/', user._id]" ><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
+    </div>
+  </div>
+  <!-- Panel Outer Layer -->
+</div>
+<!-- Panel End -->
