@@ -42,6 +42,8 @@ export class DeleteBlogComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+    //to change
     this.currentUrl = this.activatedRoute.snapshot.params; // Get URL paramaters on page load
     // Function for GET request to retrieve blog
     this.blogService.getSingleBlog(this.currentUrl.id).subscribe(data => {
@@ -55,7 +57,7 @@ export class DeleteBlogComponent implements OnInit {
           title: data.blog.title, // Set title
           body: data.blog.body, // Set body
           createdBy: data.blog.createdBy, // Set created_by field
-          createdAt: data.blog.createdAt // Set created_at field
+          // createdAt: data.blog.createdAt // Set created_at field
         }
         this.foundBlog = true; // Displaly blog window
       }

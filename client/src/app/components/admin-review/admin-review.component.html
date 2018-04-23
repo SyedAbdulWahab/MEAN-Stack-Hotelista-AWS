@@ -18,10 +18,10 @@
 <div *ngIf="!newPost">
   <!-- Panel Outer Layer -->
   <div *ngFor="let blog of blogPosts">
-    <div  class="panel panel-primary" *ngIf="blog.title === blog.createdBy">
+    <div  class="panel panel-primary" >
       <!-- Panel Title -->
       <div class="panel-heading">
-        <h3 class="panel-title">{{ blog.title }}</h3>
+        <h3 class="panel-title">{{ blog.reviewer }}</h3>
       </div>
 
       <!-- Panel Body -->
@@ -32,11 +32,11 @@
       <!-- Panel Footer Start -->
       <div class="panel-footer">
         <!-- <strong>Posted by: </strong>{{ blog.createdBy }} -->
-        <br />
+        <!-- <br />
         <strong>Date: </strong>{{ blog.createdAt | date:'MMM dd, yyyy' }}
-        <br />
+        <br /> -->
         <!-- Delete Button -->
-        <a [routerLink]="['/delete-blog/', blog._id]" ><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
+        <a [routerLink]="['/delete-blog/', blog.reviewer]" ><button type="button" name="button" class="btn btn-sm btn-danger">Delete</button></a>
 
       </div>
       <!-- Panel Footer End -->
