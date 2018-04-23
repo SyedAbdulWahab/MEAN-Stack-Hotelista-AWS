@@ -125,8 +125,14 @@ export class RoomComponent implements OnInit {
   BookRoom(id) {
      if (this.isBooked)
      return;
+
+    var obj = {
+      title: id,
+      username: this.username
+    }
+
     // Service to book a Room
-    this.roomService.bookRoom(id).subscribe(data => {
+    this.roomService.bookRoom(obj).subscribe(data => {
       this.getAllRooms(); // Refresh Rooms after booked
     });
   }
@@ -150,9 +156,9 @@ export class RoomComponent implements OnInit {
 
   ngOnInit() {
     // Get profile username on page load
-    // this.authService.getProfile().subscribe(profile => {
-    //   this.username = profile.user.username; // Used when creating new room posts and comments
-    // });
+    this.authService.getProfile().subscribe(profile => {
+      this.username = profile.user.username; // Used when creating new room posts and comments
+    });
 
     this.getAllRooms(); // Get all rooms on component load
   }

@@ -22,7 +22,7 @@ export class DeleteRoomComponent implements OnInit {
     private router: Router
   ) { }
 
-  // Function to delete blogs
+  // Function to delete rooms
   deleteRoom() {
     this.processing = true; // Disable buttons
     // Function for DELETE request
@@ -34,9 +34,9 @@ export class DeleteRoomComponent implements OnInit {
       } else {
         this.messageClass = 'alert alert-success'; // Return bootstrap success class
         this.message = data.message; // Return success message
-        // After two second timeout, route to blog page
+        // After two second timeout, route to room page
         setTimeout(() => {
-          this.router.navigate(['/adminRoom']); // Route users to blog page
+          this.router.navigate(['/adminRoom']); // Route users to room page
         }, 2000);
       }
     });
@@ -44,20 +44,20 @@ export class DeleteRoomComponent implements OnInit {
 
   ngOnInit() {
     this.currentUrl = this.activatedRoute.snapshot.params; // Get URL paramaters on page load
-    // Function for GET request to retrieve blog
+    // Function for GET request to retrieve room
     this.roomService.getSingleRoom(this.currentUrl.id).subscribe(data => {
       // Check if request was successfull
       if (!data.success) {
         this.messageClass = 'alert alert-danger'; // Return bootstrap error class
         this.message = data.message; // Return error message
       } else {
-        // Create the blog object to use in HTML
+        // Create the room object to use in HTML
         this.room = {
           title: data.room.title, // Set title
           body: data.room.body, // Set body
           // booked: false // Booked field
         }
-        this.foundRoom = true; // Displaly blog window
+        this.foundRoom = true; // Display room window
       }
     });
   }

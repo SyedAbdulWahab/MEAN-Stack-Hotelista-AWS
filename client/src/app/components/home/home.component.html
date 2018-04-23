@@ -4,14 +4,14 @@
   <div>
     <a *ngIf="!authService.loggedIn()" routerLink="/register" class="btn btn-primary">Register</a>
     <a *ngIf="!authService.loggedIn()" routerLink="/login" class="btn btn-default">Login</a>
-    <a *ngIf="authService.loggedIn()" routerLink="/blog" class="btn btn-success">View Blogs</a>
+    <a *ngIf="authService.loggedIn()" routerLink="/room" class="btn btn-success">View Rooms</a>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-6 col-md-4">
     <div class="thumbnail">
-      <img src="https://image.flaticon.com/icons/svg/417/417745.svg" alt="placeholder image" width="140" height="140">
+      <img src="{{s3Path+ 'luxury-rooms.jpg'}}" alt="placeholder image" width="280" height="280">
       <div class="caption">
         <h3>Luxury Rooms</h3>
         <p>MongoDB is a free and open-source cross-platform document-oriented database program. This NoSQL database program uses JSON-like documents with schemas.</p>
@@ -20,7 +20,7 @@
   </div>
 
   <div class="col-sm-6 col-md-4">
-    <div class=thumbnail> <img src="https://image.flaticon.com/icons/svg/417/417746.svg" alt="Generic placeholder image" width="140" height="140">
+    <div class=thumbnail> <img src="{{s3Path + 'breathtaking-views.jpg'}}" alt="Generic placeholder image" width="280" height="280">
       <div class=caption>
         <h3>Breathtaking Views</h3>
         <p>Express.js is a Node.js framework. Node.js is a platform that allows JavaScript to be used outside the Web Browsers, for creating web and network applications.</p>
@@ -29,7 +29,7 @@
   </div>
 
   <div class="col-sm-6 col-md-4">
-    <div class=thumbnail> <img src="https://image.flaticon.com/icons/svg/417/417751.svg" alt="Generic placeholder image" width="140" height="140">
+    <div class=thumbnail> <img src="{{s3Path + 'top-notch-facilities.jpg'}}" alt="Generic placeholder image" width="280" height="280">
       <div class=caption>
         <h3>Top Notch Facilities</h3>
         <p>Angular is a development platform for building mobile and desktop web applications. Ut dignissim eleifend maximus. Ut dignissim eleifend maximus. Ut dignissim eleifend.</p>
@@ -38,16 +38,16 @@
   </div>
 
   <div class="col-sm-6 col-md-4">
-    <div class=thumbnail> <img src="https://image.flaticon.com/icons/svg/417/417754.svg" alt="Generic placeholder image" width="140" height="140">
+    <div class=thumbnail> <img src="{{s3Path + 'premium-food.jpg'}}" alt="Generic placeholder image" width="280" height="250">
       <div class=caption>
-        <h3>Premuim Food</h3>
+        <h3>Premium Food</h3>
         <p>Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient.</p>
       </div>
     </div>
   </div>
 
   <div class="col-sm-6 col-md-4">
-    <div class=thumbnail> <img src="https://image.flaticon.com/icons/svg/417/417768.svg" alt="Generic placeholder image" width="140" height="140">
+    <div class=thumbnail> <img src="{{s3Path + 'proactive-service.jpg'}}" alt="Generic placeholder image" width="280" height="280">
       <div class=caption>
         <h3>Proactive Service</h3>
         <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
@@ -56,7 +56,7 @@
   </div>
 
   <div class="col-sm-6 col-md-4">
-    <div class=thumbnail> <img src="https://image.flaticon.com/icons/svg/417/417764.svg" alt="Generic placeholder image" width="140" height="140">
+    <div class=thumbnail> <img src="{{s3Path + 'customer-support.jpg'}}" alt="Generic placeholder image" width="280" height="280">
       <div class=caption>
         <h3>Customer Support</h3>
         <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>

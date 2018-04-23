@@ -77,6 +77,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.message = data.message; // Set success message
         // Function to store user's token in client local storage
         this.myAuthService.storeUserData(data.token, data.user);
+
+        localStorage.setItem('username',data.user.username);
         // After 2 seconds, redirect to dashboard page
         setTimeout(() => {
           // Check if user was redirected or logging in for first time
@@ -90,6 +92,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
+  //social login
   signIn(provider) {
     this.sub = this.authService.login(provider).subscribe(
       newData => {

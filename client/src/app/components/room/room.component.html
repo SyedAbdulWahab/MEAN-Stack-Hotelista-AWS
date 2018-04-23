@@ -36,7 +36,7 @@
       <br />
 
       <!-- Book Button -->
-      <button *ngIf="room.isBooked !== true" type="button" name="button" class="btn btn-sm btn-success" (click)="BookRoom(room._id)">Book Room</button>
+      <button *ngIf="room.isBooked !== true" type="button" name="button" class="btn btn-sm btn-success" (click)="BookRoom(room.title)">Book Room</button>
     </div>
     <!-- Panel Footer End -->
     <!-- Post Comment Box: Start -->

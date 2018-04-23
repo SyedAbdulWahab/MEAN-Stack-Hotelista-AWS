@@ -62,9 +62,8 @@ export class RoomService {
 
   //TODO : change to book room
   // Function to book a room
-  bookRoom(id) {
-    const roomData = { id: id };
-    return this.http.put(this.domain + 'rooms/bookRoom/' , roomData, this.options).map(res => res.json());
+  bookRoom(obj) {
+    return this.http.put(this.domain + 'rooms/bookRoom/' , obj, this.options).map(res => res.json());
   }
 
 }

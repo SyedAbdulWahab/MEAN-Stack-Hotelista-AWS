@@ -21,11 +21,11 @@ export class DeleteUserComponent implements OnInit {
     private router: Router
   ) { }
 
-  // Function to delete blogs
+  // Function to delete users
   deleteUser() {
     this.processing = true; // Disable buttons
     // Function for DELETE request
-    this.userService.deleteUser(this.currentUrl.id).subscribe(data => {
+    this.userService.deleteUser(this.user.name).subscribe(data => {
       // Check if delete request worked
       if (!data.success) {
         this.messageClass = 'alert alert-danger'; // Return error bootstrap class
@@ -33,9 +33,9 @@ export class DeleteUserComponent implements OnInit {
       } else {
         this.messageClass = 'alert alert-success'; // Return bootstrap success class
         this.message = data.message; // Return success message
-        // After two second timeout, route to blog page
+        // After two second timeout, route to user page
         setTimeout(() => {
-          this.router.navigate(['/user']); // Route users to blog page
+          this.router.navigate(['/user']); // Route users to user page
         }, 2000);
       }
     });
@@ -43,14 +43,14 @@ export class DeleteUserComponent implements OnInit {
 
   ngOnInit() {
     this.currentUrl = this.activatedRoute.snapshot.params; // Get URL paramaters on page load
-    // Function for GET request to retrieve blog
+    // Function for GET request to retrieve user
     this.userService.getSingleUser(this.currentUrl.id).subscribe(data => {
       // Check if request was successful
       if (!data.success) {
         this.messageClass = 'alert alert-danger'; // Return bootstrap error class
         this.message = data.message; // Return error message
       } else {
-        // Create the blog object to use in HTML
+        // Create the user object to use in HTML
         this.user = {
           name: data.user.username, // Set username
           email: data.user.email, // Set email

@@ -1,11 +1,28 @@
 const User = require('../models/user'); // Import User Model Schema
 const jwt = require('jsonwebtoken'); // Compact, URL-safe means of representing claims to be transferred between two parties.
 const config = require('../config/database'); // Import database configuration
+const writeUser = require('../models/writeSingleUser');
+const readUserByName = require('../models/readSingleUserByName');
+const bcrypt = require('bcrypt-nodejs'); // A native JS bcrypt library for NodeJS
+
+var AWS = require("aws-sdk");
+var awsConfig = {
+  "region": "us-west-2",
+  "endpoint": "http://dynamodb.us-west-2.amazonaws.com",
+  "accessKeyId": "AKIAJDMWJ3P63NDAYSWA",
+  "secretAccessKey": "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"
+};
+AWS.config.update(awsConfig);
+
+var docClient = new AWS.DynamoDB.DocumentClient();
+
 
 module.exports = (router) => {
   /* ==============
      Register Route
   ============== */
+
+  //DYNAMO DONE
   router.post('/register', (req, res) => {
     // Check if email was provided
     if (!req.body.email) {
@@ -84,10 +101,35 @@ module.exports = (router) => {
                 }
               }
             } else {
-              res.json({
-                success: true,
-                message: 'Acount registered!'
-              }); // Return success
+
+              var dynamoUser = {
+                "username": user.username,
+                "email": user.email,
+                "password": user.password
+              }
+
+              var params = {
+                TableName: "User",
+                Item: dynamoUser
+              };
+
+              docClient.put(params, function (err, data) {
+
+                if (err) {
+                  console.log("users::save::error - " + JSON.stringify(err, null, 2));
+                  res.json({
+                    success: true,
+                    message: 'Account registered on Mongo but not on Dynamo! ' + err
+                  }); // Return success
+                } else {
+                  console.log("users::save::success");
+                  res.json({
+                    success: true,
+                    message: 'Account registered!'
+                  }); // Return success
+                }
+              });
+              // var error = writeUser.writeSingleUser(dynamoUser);
             }
           });
         }
@@ -123,6 +165,10 @@ module.exports = (router) => {
               message: 'E-mail is already taken'
             }); // Return as taken e-mail
           } else {
+
+
+
+
             res.json({
               success: true,
               message: 'E-mail is available'
@@ -161,6 +207,9 @@ module.exports = (router) => {
               message: 'Username is already taken'
             }); // Return as taken username
           } else {
+
+            readUserByName(req.params.username);
+
             res.json({
               success: true,
               message: 'Username is available'
@@ -174,6 +223,7 @@ module.exports = (router) => {
   /* ========
   LOGIN ROUTE
   ======== */
+  //DYNAMO DONE
   router.post('/login', (req, res) => {
 
     if (req.body.provider == "google" ||
@@ -188,9 +238,9 @@ module.exports = (router) => {
         message: 'Success!',
         token: token,
         user: req.body,
-        name : req.body.name,
-        email : req.body.email,
-        image : req.body.image
+        name: req.body.name,
+        email: req.body.email,
+        image: req.body.image
       }); // Return success and token to frontend
     } else {
 
@@ -262,14 +312,50 @@ module.exports = (router) => {
                     }, config.secret, {
                       expiresIn: '24h'
                     }); // Create a token for client
-                    res.json({
-                      success: true,
-                      message: 'Success!',
-                      token: token,
-                      user: {
-                        username: user.username
+
+                    // readUserByName(req.body.username.toLowerCase());
+
+
+                    var params = {
+                      TableName: "User",
+                      Key: {
+                        "username": req.body.username.toLowerCase()
                       }
-                    }); // Return success and token to frontend
+                    };
+                    docClient.get(params, function (err, data) {
+                      if (err) {
+                        console.log("users::fetchOneByKey::error - " + JSON.stringify(err, null, 2));
+                        res.json({
+                          success: false,
+                          message: 'Username not found.'
+                        }); // Return error
+                      } else {
+                        console.log("users::fetchOneByKey::success - " + JSON.stringify(data, null, 2));
+                        console.log(data.Item.password);
+
+                        // data.Item.password = bcrypt.hashSync(data.Item.password);
+                        const passValid = bcrypt.compareSync(req.body.password, data.Item.password);
+
+                        if (!passValid) {
+                          res.json({
+                            success: false,
+                            message: 'Password invalid'
+                          }); // Return error
+
+                        } else {
+
+                          res.json({
+                            success: true,
+                            message: 'Success!',
+                            token: token,
+                            user: {
+                              username: user.username
+                            }
+                          }); // Return success and token to frontend
+
+                        }
+                      }
+                    })
                   }
                 }
               }
@@ -279,81 +365,6 @@ module.exports = (router) => {
       }
     }
   });
-
-  /* ========
-  ADMIN LOGIN ROUTE
-  ======== */
-  router.post('/adminLogin', (req, res) => {
-    alert("here!");
-    // Check if username was provided
-    if (!req.body.username) {
-      res.json({
-        success: false,
-        message: 'No username was provided'
-      }); // Return error
-    } else {
-      // Check if password was provided
-      if (!req.body.password) {
-        res.json({
-          success: false,
-          message: 'No password was provided.'
-        }); // Return error
-      } else {
-
-        if (user.username !== "admin" || user.password !== "admin") {
-          res.json({
-            success: false,
-            message: 'Wrong username or password!'
-          }); // Return error
-        }
-
-
-        // Check if username exists in database
-        // User.findOne({
-        //   username: req.body.username.toLowerCase()
-        // }, (err, user) => {
-        //   // Check if error was found
-        //   if (err) {
-        //     res.json({
-        //       success: false,
-        //       message: err
-        //     }); // Return error
-        //   } else {
-        //     // Check if username was found
-        //     if (!user) {
-        //       res.json({
-        //         success: false,
-        //         message: 'Username not found.'
-        //       }); // Return error
-        //     } else {
-        //       const validPassword = user.comparePassword(req.body.password); // Compare password provided to password in database
-        //       // Check if password is a match
-        //       if (!validPassword) {
-        //         res.json({
-        //           success: false,
-        //           message: 'Password invalid'
-        //         }); // Return error
-        //       } else {
-        const token = jwt.sign({
-          userId: "admin"
-        }, config.secret, {
-          expiresIn: '24h'
-        }); // Create a token for client
-        res.json({
-          success: true,
-          message: 'Success!',
-          token: token,
-          user: {
-            username: user.username
-          }
-        }); // Return success and token to frontend
-      }
-    }
-  });
-  //       });
-  //     }
-  //   }
-  // });
 
   /* ================================================
   MIDDLEWARE - Used to grab user's token from headers
@@ -405,6 +416,10 @@ module.exports = (router) => {
             message: 'User not found'
           }); // Return error, user was not found in db
         } else {
+
+
+
+
           res.json({
             success: true,
             user: user
@@ -417,6 +432,7 @@ module.exports = (router) => {
   /* ===============================================================
      Route to get user's public profile data
   =============================================================== */
+  //DYNAMO DONE
   router.get('/publicProfile/:username', (req, res) => {
     // Check if username was passed in the parameters
     if (!req.params.username) {
@@ -443,10 +459,36 @@ module.exports = (router) => {
               message: 'Username not found.'
             }); // Return error message
           } else {
-            res.json({
-              success: true,
-              user: user
-            }); // Return the public user's profile data
+
+            var params = {
+              TableName: "User",
+              Key: {
+                "username": req.params.username
+              }
+            };
+            docClient.get(params, function (err, data) {
+              if (err) {
+                console.log("users::fetchOneByKey::error - " + JSON.stringify(err, null, 2));
+                res.json({
+                  success: false,
+                  message: 'Username not found.'
+                }); // Return error
+              } else {
+                console.log("users::fetchOneByKey::success - " + JSON.stringify(data, null, 2));
+                res.json({
+                  success: true,
+                  user: data.Item
+                }); // Return the public user's profile data
+
+              }
+
+
+
+              // res.json({
+              //   success: true,
+              //   user: user
+              // }); // Return the public user's profile data
+            });
           }
         }
       });

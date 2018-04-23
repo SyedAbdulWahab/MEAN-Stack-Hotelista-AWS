@@ -3,9 +3,21 @@ const Room = require('../models/room'); // Import Room Model Schema
 const jwt = require('jsonwebtoken'); // Compact, URL-safe means of representing claims to be transferred between two parties.
 const config = require('../config/database'); // Import database configuration
 const Rating = require('../models/rating');
+var AWS = require("aws-sdk");
+var awsConfig = {
+  "region": "us-west-2",
+  "endpoint": "http://dynamodb.us-west-2.amazonaws.com",
+  "accessKeyId": "AKIAJDMWJ3P63NDAYSWA",
+  "secretAccessKey": "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"
+};
+AWS.config.update(awsConfig);
+
+var docClient = new AWS.DynamoDB.DocumentClient();
+
 
 module.exports = (router) => {
 
+  //DYNAMO DONE
   /* ===============================================================
      CREATE NEW ROOM
   =============================================================== */
@@ -75,10 +87,43 @@ module.exports = (router) => {
                     }
                   }
                 } else {
-                  res.json({
-                    success: true,
-                    message: 'Room saved!'
-                  }); // Return success message
+
+                  var dynamoRoom = {
+                    title: room.title, // Title field
+                    body: room.body,
+                    price: room.price, // Body field
+                    isBooked: false,
+                    roomType: room.roomType,
+                    available: room.available
+                  }
+
+
+
+                  var params = {
+                    TableName: "Room",
+                    Item: dynamoRoom
+                  };
+
+                  //return doesnt work bcoz of async
+                  docClient.put(params, function (err, data) {
+
+                    if (err) {
+                      console.log("room::save::error - " + JSON.stringify(err, null, 2));
+                      res.json({
+                        success: false,
+                        message: err
+                      }); // Return general error message
+                    } else {
+                      console.log("room::save::success");
+                      res.json({
+                        success: true,
+                        message: 'Room saved!'
+                      }); // Return success message
+                    }
+                  });
+
+
+
                 }
               });
             }
@@ -88,7 +133,7 @@ module.exports = (router) => {
     }
   });
 
-
+  //DYNAMO DONE
   router.post('/newRating', (req, res) => {
 
     if (!req.body.score) {
@@ -98,56 +143,74 @@ module.exports = (router) => {
       }); // Return error message
     } else {
 
-      User.findOne({
-        _id: req.decoded.userId
-      }, (err, user) => {
-        // Check if error was found
+      // User.findOne({
+      //   username: req.decoded.userId
+      // }, (err, user) => {
+      //   // Check if error was found
+      //   if (err) {
+      //     res.json({
+      //       success: false,
+      //       message: err
+      //     }); // Return error message
+      //   } else {
+      //     // Check if user was found in the database
+      //     if (!user) {
+      //       res.json({
+      //         success: false,
+      //         message: 'Unable to authenticate user.'
+      //       }); // Return error message
+      //     } else {
+
+      const rating = new Rating({
+        rating: req.body.score,
+        ratedBy: req.body.ratedBy
+      });
+
+      rating.save((err) => {
+        // Check if error
         if (err) {
+
           res.json({
             success: false,
             message: err
-          }); // Return error message
+          }); // Return general error message
+
+
         } else {
-          // Check if user was found in the database
-          if (!user) {
-            res.json({
-              success: false,
-              message: 'Unable to authenticate user.'
-            }); // Return error message
-          } else {
 
-            const rating = new Rating({
-              rating: req.body.score,
-              ratedBy: user.username
-            });
-
-            rating.save((err) => {
-              // Check if error
-              if (err) {
-
-                res.json({
-                  success: false,
-                  message: err
-                }); // Return general error message
-
-
-              } else {
-                res.json({
-                  success: true,
-                  message: 'Rating saved!'
-                }); // Return success message
-              }
-            });
-
+          var dynamoRating = {
+            ratedBy: req.body.ratedBy,
+            rating: req.body.score
           }
+
+          var params = {
+            TableName: "Rating",
+            Item: dynamoRating
+          }
+
+          docClient.put(params, function (err, data) {
+
+            if (err) {
+              console.log("room::save::error - " + JSON.stringify(err, null, 2));
+              res.json({
+                success: false,
+                message: err
+              }); // Return general error message
+            } else {
+              console.log("room::save::success");
+              res.json({
+                success: true,
+                message: 'Rating saved!'
+              }); // Return success message
+            }
+          });
         }
       });
-
     }
   });
 
 
-
+  //DYNAMO DONE
   /* ===============================================================
      GET ALL ROOMS
   =============================================================== */
@@ -168,10 +231,27 @@ module.exports = (router) => {
             message: 'No rooms found.'
           }); // Return error of no rooms found
         } else {
-          res.json({
-            success: true,
-            rooms: rooms
-          }); // Return success and rooms array
+
+          var params = {
+            TableName: "Room"
+          }
+
+          docClient.scan(params, function (err, data) {
+            if (err) {
+              console.log(err, err.stack); // an error occurred
+              res.json({
+                success: false,
+                message: 'No rooms found.'
+              }); // Return error of no users found
+            } else {
+              console.log(data); // successful response
+              res.json({
+                success: true,
+                rooms: data.Items,
+              }); // Return success and users array
+            }
+          })
+
         }
       }
     }).sort({
@@ -199,10 +279,27 @@ module.exports = (router) => {
             message: 'No users found.'
           }); // Return error of no users found
         } else {
-          res.json({
-            success: true,
-            users: users
-          }); // Return success and users array
+
+          var params = {
+            TableName: "User"
+          }
+
+          docClient.scan(params, function (err, data) {
+            if (err) {
+              console.log(err, err.stack); // an error occurred
+              res.json({
+                success: false,
+                message: 'No users found.'
+              }); // Return error of no users found
+            } else {
+              console.log(data); // successful response
+
+              res.json({
+                success: true,
+                users: data.Items,
+              }); // Return success and users array
+            }
+          })
         }
       }
     }).sort({
@@ -210,6 +307,7 @@ module.exports = (router) => {
     }); // Sort users from newest to oldest
   });
 
+  //DYNAMO DONE
   /* ===============================================================
      GET SINGLE ROOM
   =============================================================== */
@@ -218,40 +316,63 @@ module.exports = (router) => {
     if (!req.params.id) {
       res.json({
         success: false,
-        message: 'No room ID was provided.'
+        message: 'No room title was provided.'
       }); // Return error message
     } else {
       // Check if the room id is found in database
-      Room.findOne({
-        _id: req.params.id
-      }, (err, room) => {
-        // Check if the id is a valid ID
+      // Room.findOne({
+      //   title: req.params.id
+      // }, (err, room) => {
+      //   // Check if the id is a valid ID
+      //   if (err) {
+      //     res.json({
+      //       success: false,
+      //       message: 'Not a valid room id'
+      //     }); // Return error message
+      //   } else {
+      //     // Check if room was found by id
+      //     if (!room) {
+      //       res.json({
+      //         success: false,
+      //         message: 'Room not found.'
+      //       }); // Return error message
+      //     } else {
+
+
+      var params = {
+        TableName: "Room",
+        Key: {
+          "title": req.params.id
+        }
+      };
+      docClient.get(params, function (err, data) {
         if (err) {
+          console.log("room::fetchOneByKey::error - " + JSON.stringify(err, null, 2));
           res.json({
             success: false,
-            message: 'Not a valid room id'
+            message: 'Room not found.'
           }); // Return error message
         } else {
-          // Check if room was found by id
-          if (!room) {
-            res.json({
-              success: false,
-              message: 'Room not found.'
-            }); // Return error message
-          } else {
-            res.json({
-              success: true,
-              room: room
-            }); // Return success
-          }
+          console.log("room::fetchOneByKey::success - " + JSON.stringify(data, null, 2));
+          res.json({
+            success: true,
+            room: data.Item
+          }); // Return success
         }
-        // });
-        // }
-        // }
-      });
-    }
-  });
+      })
 
+
+
+    }
+    // });
+    // }
+    // }
+  });
+  //     });
+  //   }
+  // });
+
+  //DYNAMO DONE
   /* ===============================================================
      GET SINGLE USER
   =============================================================== */
@@ -265,7 +386,7 @@ module.exports = (router) => {
     } else {
       // Check if the user id is found in database
       User.findOne({
-        _id: req.params.id
+        username: req.params.id
       }, (err, user) => {
         // Check if the id is a valid ID
         if (err) {
@@ -281,10 +402,27 @@ module.exports = (router) => {
               message: 'User not found.'
             }); // Return error message
           } else {
-            res.json({
-              success: true,
-              user: user
-            }); // Return success
+            var params = {
+              TableName: "User",
+              Key: {
+                "username": req.params.id
+              }
+            };
+            docClient.get(params, function (err, data) {
+              if (err) {
+                console.log("users::fetchOneByKey::error - " + JSON.stringify(err, null, 2));
+                res.json({
+                  success: false,
+                  message: 'User not found.'
+                }); // Return error message
+              } else {
+                console.log("users::fetchOneByKey::success - " + JSON.stringify(data, null, 2));
+                res.json({
+                  success: true,
+                  user: user
+                }); // Return success
+              }
+            })
           }
         }
       });
@@ -292,65 +430,92 @@ module.exports = (router) => {
   });
 
   /* ===============================================================
-     UPDATE BLOG POST
+     UPDATE ROOM POST
   =============================================================== */
   router.put('/updateRoom', (req, res) => {
     // Check if id was provided
-    if (!req.body._id) {
+    if (!req.body.title) {
       res.json({
         success: false,
         message: 'No room id provided'
       }); // Return error message
     } else {
       // Check if id exists in database
-      Room.findOne({
-        _id: req.body._id
-      }, (err, room) => {
-        // Check if id is a valid ID
+      // Room.findOne({
+      //   _id: req.body._id
+      // }, (err, room) => {
+      //   // Check if id is a valid ID
+      //   if (err) {
+      //     res.json({
+      //       success: false,
+      //       message: 'Not a valid room id'
+      //     }); // Return error message
+      //   } else {
+      //     // Check if id was found in the database
+      //     if (!room) {
+      //       res.json({
+      //         success: false,
+      //         message: 'Room id was not found.'
+      //       }); // Return error message
+      //     } else {
+      //       // room.title = req.body.title; // Save latest room title
+      //       room.body = req.body.body; // Save latest body
+      //       room.price = req.body.price; // Save latest body
+      //       room.available = req.body.available;
+      //       room.roomType = req.body.roomType;
+      //       room.save((err) => {
+      //         if (err) {
+      //           if (err.errors) {
+      //             res.json({
+      //               success: false,
+      //               message: 'Please ensure form is filled out properly'
+      //             });
+      //           } else {
+      //             res.json({
+      //               success: false,
+      //               message: err
+      //             }); // Return error message
+      //           }
+      //         } else {
+      var params = {
+        TableName: "Room",
+        Key: {
+          "title": req.body.title
+        },
+        UpdateExpression: "set body = :b, price=:p, available=:a, roomType=:rt",
+        ExpressionAttributeValues: {
+          ":b": req.body.body,
+          ":p": req.body.price,
+          ":a": req.body.available,
+          ":rt": req.body.roomType,
+
+        },
+        ReturnValues: "UPDATED_NEW"
+      };
+
+      console.log("Updating Room...");
+      docClient.update(params, function (err, data) {
         if (err) {
+          console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+
           res.json({
             success: false,
-            message: 'Not a valid room id'
+            message: err
           }); // Return error message
         } else {
-          // Check if id was found in the database
-          if (!room) {
-            res.json({
-              success: false,
-              message: 'Room id was not found.'
-            }); // Return error message
-          } else {
-            room.title = req.body.title; // Save latest room title
-            room.body = req.body.body; // Save latest body
-            room.price = req.body.price; // Save latest body
-            room.available = req.body.available;
-            room.roomType = req.body.roomType;
-            room.save((err) => {
-              if (err) {
-                if (err.errors) {
-                  res.json({
-                    success: false,
-                    message: 'Please ensure form is filled out properly'
-                  });
-                } else {
-                  res.json({
-                    success: false,
-                    message: err
-                  }); // Return error message
-                }
-              } else {
-                res.json({
-                  success: true,
-                  message: 'Room Updated!'
-                }); // Return success message
-              }
-            });
-          }
+          console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+          res.json({
+            success: true,
+            message: 'Room Updated!'
+          }); // Return success message
         }
       });
-      // });
     }
   });
+  //       }
+  //     });
+  //   }
+  // });
 
   /* ===============================================================
      DELETE ROOM
@@ -360,43 +525,56 @@ module.exports = (router) => {
     if (!req.params.id) {
       res.json({
         success: false,
-        message: 'No id provided'
+        message: 'No title provided'
       }); // Return error message
     } else {
       // Check if id is found in database
-      Room.findOne({
-        _id: req.params.id
-      }, (err, room) => {
-        // Check if error was found
+      // Room.findOne({
+      //   _id: req.params.id
+      // }, (err, room) => {
+      //   // Check if error was found
+      //   if (err) {
+      //     res.json({
+      //       success: false,
+      //       message: 'Invalid id'
+      //     }); // Return error message
+      //   } else {
+      //     // Check if room was found in database
+      //     if (!room) {
+      //       res.json({
+      //         success: false,
+      //         messasge: 'Room was not found'
+      //       }); // Return error message
+      //     } else {
+      //       room.remove((err) => {
+      //         if (err) {
+      //           res.json({
+      //             success: false,
+      //             message: err
+      //           }); // Return error message
+      //         } else {
+
+      var params = {
+        Key: {
+          "title": req.params.id
+        },
+        TableName: "Room"
+      }
+
+      docClient.delete(params, function (err, data) {
         if (err) {
           res.json({
             success: false,
-            message: 'Invalid id'
+            message: err
           }); // Return error message
         } else {
-          // Check if room was found in database
-          if (!room) {
-            res.json({
-              success: false,
-              messasge: 'Room was not found'
-            }); // Return error message
-          } else {
-            room.remove((err) => {
-              if (err) {
-                res.json({
-                  success: false,
-                  message: err
-                }); // Return error message
-              } else {
-                res.json({
-                  success: true,
-                  message: 'Room deleted!'
-                }); // Return success message
-              }
-            });
-          }
+          res.json({
+            success: true,
+            message: 'Room deleted!'
+          }); // Return success message
         }
-      });
+      })
+
     }
   });
 
@@ -412,111 +590,103 @@ module.exports = (router) => {
       }); // Return error message
     } else {
       // Check if id is found in database
-      User.findOne({
-        _id: req.params.id
-      }, (err, user) => {
-        // Check if error was found
+      // User.findOne({
+      //   _id: req.params.id
+      // }, (err, user) => {
+      //   // Check if error was found
+      //   if (err) {
+      //     res.json({
+      //       success: false,
+      //       message: 'Invalid id'
+      //     }); // Return error message
+      //   } else {
+      //     // Check if user was found in database
+      //     if (!user) {
+      //       res.json({
+      //         success: false,
+      //         messasge: 'User was not found'
+      //       }); // Return error message
+      //     } else {
+      //       user.remove((err) => {
+      //         if (err) {
+      //           res.json({
+      //             success: false,
+      //             message: err
+      //           }); // Return error message
+      //         } else {
+
+      var params = {
+        Key: {
+          "username": req.params.id
+        },
+        TableName: "User"
+      }
+
+      docClient.delete(params, function (err, data) {
         if (err) {
           res.json({
             success: false,
-            message: 'Invalid id'
+            message: err
           }); // Return error message
         } else {
-          // Check if user was found in database
-          if (!user) {
-            res.json({
-              success: false,
-              messasge: 'User was not found'
-            }); // Return error message
-          } else {
-            user.remove((err) => {
-              if (err) {
-                res.json({
-                  success: false,
-                  message: err
-                }); // Return error message
-              } else {
-                res.json({
-                  success: true,
-                  message: 'User deleted!'
-                }); // Return success message
-              }
-            });
-          }
+          res.json({
+            success: true,
+            message: 'User deleted!'
+          }); // Return success message
         }
-      });
+      })
     }
   });
+
+
+  //     });
+  //   }
+  // });
 
   /* ===============================================================
      BOOK ROOM
   =============================================================== */
   router.put('/bookRoom', (req, res) => {
     // Check if id was passed provided in request body
-    if (!req.body.id) {
+    if (!req.body.title) {
       res.json({
         success: false,
-        message: 'No id was provided.'
+        message: 'No title was provided.'
       }); // Return error message
     } else {
       // Search the database with id
-      Room.findOne({
-        _id: req.body.id
-      }, (err, room) => {
-        // Check if error was encountered
+
+      var params = {
+        TableName: "Room",
+        Key: {
+          "title": req.body.title
+        },
+        UpdateExpression: "set isBooked = :ib, bookedBy=:bb",
+        ExpressionAttributeValues: {
+          ":ib": true,
+          ":bb": req.body.username,
+        },
+        ReturnValues: "UPDATED_NEW"
+      };
+
+      console.log("Booking Room...");
+      docClient.update(params, function (err, data) {
         if (err) {
+          console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+
           res.json({
             success: false,
-            message: 'Invalid room id'
+            message: err
           }); // Return error message
         } else {
-          // Check if id matched the id of a room post in the database
-          if (!room) {
-            res.json({
-              success: false,
-              message: 'That room was not found.'
-            }); // Return error message
-          } else {
-            // Get data from user that is signed in
-            User.findOne({
-              _id: req.decoded.userId
-            }, (err, user) => {
-              // Check if error was found
-              if (err) {
-                res.json({
-                  success: false,
-                  message: 'Something went wrong.'
-                }); // Return error message
-              } else {
-                // Check if id of user in session was found in the database
-                if (!user) {
-                  res.json({
-                    success: false,
-                    message: 'Could not authenticate user.'
-                  }); // Return error message
-                } else {
-                  room.isBooked = true; // book room
-                  room.bookedBy = user.username; // Add booker's username
-                  // Save blog post
-                  room.save((err) => {
-                    if (err) {
-                      res.json({
-                        success: false,
-                        message: 'Something went wrong.'
-                      }); // Return error message
-                    } else {
-                      res.json({
-                        success: true,
-                        message: 'Room booked!'
-                      }); // Return success message
-                    }
-                  });
-                }
-              }
-            });
-          }
+          console.log("Room Booking succeeded:", JSON.stringify(data, null, 2));
+          res.json({
+            success: true,
+            message: 'Room Booked!'
+          }); // Return success message
         }
       });
+
     }
   });
 

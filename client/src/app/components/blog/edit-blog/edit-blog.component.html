@@ -28,6 +28,6 @@
   <!-- Go Back Button -->
   <button [disabled]="processing" type="button" name="button" class="btn btn-success" (click)="goBack()">Go Back</button>
   <!-- Save Changes Button -->
-  <button [disabled]="processing || (!title.dirty && !body.dirty)" type="submit" name="save" class="btn btn-info">Save Changes</button>
+  <button [disabled]="processing" type="submit" name="save" class="btn btn-info">Save Changes</button>
 
 </form>

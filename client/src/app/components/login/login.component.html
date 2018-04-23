@@ -35,10 +35,9 @@
   </div>
   <!-- Submit Button -->
   <input [disabled]="!form.valid || processing" class="btn btn-primary" type="submit" value="Login" />
-  <button type="button" (click)="signIn('google')">google</button>
-  <button type="button"(click)="signIn('linkedin')">linkedIn</button>
-  <button type="button"(click)="signIn('facebook')">facebook</button>
-  <button type="button" (click)="logout()">logout</button>
+  <button type="button" class="btn btn-danger" (click)="signIn('google')">Google</button>
+  <button type="button" class="btn btn-primary" (click)="signIn('facebook')">Facebook</button>
+  <button type="button" class="btn btn-default" (click)="logout()">logout</button>
   <div *ngIf="user">
     <table>
       <tr>

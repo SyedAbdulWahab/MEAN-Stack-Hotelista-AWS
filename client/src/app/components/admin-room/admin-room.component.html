@@ -18,7 +18,7 @@
 <br />
 
 <!-- New Room Form -->
-<form [formGroup]="form" (submit) = "onRoomSubmit()" name="roomForm" *ngIf="newPost">
+<form [formGroup]="form" (submit)="onRoomSubmit()" name="roomForm" *ngIf="newPost">
   <!-- Title Input -->
   <div class="form-group">
     <label for="title">Title</label>
@@ -66,8 +66,8 @@
   <div class="form-group">
     <label for="roomType">Room Type: </label>
     <div [ngClass]="{'has-success': form.controls.body.valid, 'has-error': form.controls.body.dirty && form.controls.body.errors}">
-      <select class="form-control" name="roomType" formControlName="roomType" >
-      <option name="roomType" *ngFor="let rt of roomTypes" [value]="rt">{{rt}}</option>
+      <select class="form-control" name="roomType" formControlName="roomType">
+        <option name="roomType" *ngFor="let rt of roomTypes" [value]="rt">{{rt}}</option>
       </select>
       <ul class="help-block">
         <li *ngIf="form.controls.body.dirty && form.controls.body.errors?.required">This field is required.</li>
@@ -77,13 +77,13 @@
 
 
   <!-- Availability Input -->
-   <div class="form-group">
+  <div class="form-group">
     <label for="avail">Availability: </label>
     <div [ngClass]="{'has-success': form.controls.body.valid, 'has-error': form.controls.body.dirty && form.controls.body.errors}">
-      <select name="available" class="form-control" formControlName="available" >
-      <option  *ngFor="let av of availability" [value]="av">{{av}}</option>
+      <select name="available" class="form-control" formControlName="available">
+        <option *ngFor="let av of availability" [value]="av">{{av}}</option>
       </select>
-       <ul class="help-block">
+      <ul class="help-block">
         <li *ngIf="form.controls.body.dirty && form.controls.body.errors?.required">This field is required.</li>
       </ul>
     </div>
@@ -133,73 +133,15 @@
     <!-- Panel Footer Start -->
     <div class="panel-footer">
       <!-- Edit Button -->
-      <a [routerLink]="['/edit-room/', room._id]">
+      <a [routerLink]="['/edit-room/', room.title]">
         <button type="button" name="button" class="btn btn-sm btn-info">Edit</button>
       </a>
       <!-- Delete Button -->
-      <a [routerLink]="['/delete-room/', room._id]">
+      <a [routerLink]="['/delete-room/', room.title]">
         <button type="button" name="button" class="btn btn-sm btn-danger">Delete</button>
       </a>
       <br />
-
-      <!-- Book Button -->
-      <!-- <button *ngIf="room.isBooked !== true" type="button" name="button" class="btn btn-sm btn-success" (click)="BookRoom(room._id)">Book Room</button> -->
     </div>
-    <!-- Panel Footer End -->
-    <!-- Post Comment Box: Start -->
-    <!-- <ul class="list-group"> -->
-    <!-- <li class="list-group-item"> -->
-    <!-- Post Comment Button -->
-    <!-- <button type="button" name="button" class="btn btn-sm btn-danger" (click)="draftComment(blog._id)" [disabled]="newComment.indexOf(blog._id) > -1">Post Comment</button> -->
-    <!-- <br /> -->
-    <!-- <br /> -->
-    <!-- <div *ngIf="newComment.indexOf(blog._id) > -1"> -->
-
-    <!-- Form: Comment Form Start -->
-    <!-- <form [formGroup]="commentForm"> -->
-    <!-- Textarea Input -->
-    <!-- <textarea name="comment" rows="10" cols="30" class="form-control" formControlName="comment"></textarea> -->
-    <!-- Validation -->
-    <!-- <div [ngClass]="{'has-success': !commentForm.controls.comment.errors && commentForm.controls.comment.dirty, 'has-error': commentForm.controls.comment.dirty && commentForm.controls.comment.errors}"> -->
-    <!-- <ul class="help-block"> -->
-    <!-- <li *ngIf="commentForm.controls.comment.errors?.required && commentForm.controls.comment.dirty">This field is required.</li> -->
-    <!-- <li *ngIf="(commentForm.controls.comment.errors?.maxlength && commentForm.controls.comment.dirty) ||(commentForm.controls.comment.errors?.minlength && commentForm.controls.comment.dirty)">Comment must be at least 1 character but no more than 200.</li> -->
-    <!-- </ul> -->
-    <!-- </div> -->
-    <!-- Post Button -->
-    <!-- <button [disabled]="!commentForm.valid || processing" type="submit" name="button" class="btn btn-sm btn-info" (click)="postComment(blog._id)">Post</button> -->
-    <!-- Cancel Button -->
-    <!-- <button [disabled]="processing" type="button" name="button" class="btn btn-sm btn-danger" (click)="cancelSubmission(blog._id)">Cancel</button> -->
-    <!-- </form> -->
-    <!-- Form: Comment Form End -->
-
-    <!-- </div> -->
-
-    <!-- Show Comments -->
-    <!-- <li *ngIf="enabledComments.indexOf(blog._id) === -1 && blog.comments.length > 0" class="list-group-item"> -->
-    <!-- <span (click)="expand(blog._id)"> -->
-    <!-- Show comments&nbsp;&nbsp; -->
-    <!-- <div class="glyphicon glyphicon-comment"></div> -->
-    <!-- </span> -->
-    <!-- </li> -->
-
-    <!-- Hide Comments -->
-    <!-- <li *ngIf="enabledComments.indexOf(blog._id) > -1" class="list-group-item"> -->
-    <!-- <span (click)="collapse(blog._id)"> -->
-    <!-- Hide Comments&nbsp;&nbsp; -->
-    <!-- <div class="glyphicon glyphicon-comment"></div> -->
-    <!-- </span> -->
-    <!-- </li> -->
-
-    <!-- Comment -->
-    <!-- <div *ngIf="enabledComments.indexOf(blog._id) > -1"> -->
-    <!-- <li *ngFor="let comment of blog.comments" class="list-group-item"> -->
-    <!-- <strong>{{ comment.commentator }}:</strong> {{ comment.comment }} -->
-    <!-- </li> -->
-    <!-- </div> -->
-    <!-- </ul> -->
-    <!-- Post Comment Box: End -->
-
   </div>
   <!-- Panel Outer Layer -->
 </div>

@@ -28,8 +28,9 @@ export class ProfileComponent implements OnInit {
     }
     else {
       console.log("Normal Login");
+      this.username = localStorage.getItem('username');
       // Once component loads, get user's data to display on profile
-      this.authService.getProfile().subscribe(profile => {
+      this.authService.getPublicProfile(this.username).subscribe(profile => {
         this.username = profile.user.username; // Set username
         this.email = profile.user.email; // Set e-mail
       });

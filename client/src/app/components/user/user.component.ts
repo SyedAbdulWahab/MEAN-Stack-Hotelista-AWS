@@ -30,7 +30,7 @@ export class UserComponent implements OnInit {
   // Reload users on current page
   reloadUsers() {
     this.loadingUsers = true; // Used to lock button
-    this.getAllUsers(); // Add any new blogs to the page
+    this.getAllUsers(); // Add any new users to the page
     setTimeout(() => {
       this.loadingUsers = false; // Release button lock after four seconds
     }, 4000);
@@ -41,7 +41,7 @@ export class UserComponent implements OnInit {
     window.location.reload(); // Clear all variable states
   }
 
-  // Function to get all blogs from the database
+  // Function to get all users from the database
   getAllUsers() {
     // Function to GET all users from database
     this.userService.getAllUsers().subscribe(data => {
@@ -51,7 +51,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     // Get profile username on page load
-    this.getAllUsers(); // Get all blogs on component load
+    this.getAllUsers(); // Get all users on component load
   }
 
 }

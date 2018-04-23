@@ -26,6 +26,7 @@
   "homepage": "https://github.com/gugui3z24/MEAN-Stack-With-Angular-2-Tutorial#readme",
   "dependencies": {
     "angular-rateit": "^4.0.2",
+    "aws-sdk": "^2.224.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.2",
     "bower": "^1.8.4",

@@ -10,12 +10,12 @@
 <!-- Edit Room Form -->
 <form (submit)="updateRoomSubmit()" *ngIf="!loading">
   <!-- Title Field -->
-  <div class="form-group">
-    <label for="title">Title</label>
+  <!-- <div class="form-group"> -->
+    <!-- <label for="title">Title</label> -->
     <!-- Title Input -->
-    <input [disabled]="processing" type="text" name="title" placeholder="*Room Title" class="form-control" [(ngModel)]="room.title"
-      #title="ngModel" />
-  </div>
+    <!-- <input [disabled]="processing" type="text" name="title" placeholder="*Room Title" class="form-control" [(ngModel)]="room.title" -->
+      <!-- #title="ngModel" /> -->
+  <!-- </div> -->
 
   <!-- Body Field -->
   <div class="form-group">
@@ -57,12 +57,12 @@
 
 
   <!-- Delete Button -->
-  <a [routerLink]="['/delete-room/', room._id ]">
+  <a [routerLink]="['/delete-room/', room.title ]">
     <button [disabled]="processing" type="button" name="button" class="btn btn-danger">Delete</button>
   </a>
   <!-- Go Back Button -->
   <button [disabled]="processing" type="button" name="button" class="btn btn-success" (click)="goBack()">Go Back</button>
   <!-- Save Changes Button -->
-  <button [disabled]="processing || (!title.dirty && !body.dirty)" type="submit" name="save" class="btn btn-info">Save Changes</button>
+  <button [disabled]="processing" type="submit" name="save" class="btn btn-info">Save Changes</button>
 
 </form>

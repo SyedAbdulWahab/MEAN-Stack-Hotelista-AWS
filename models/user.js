@@ -160,5 +160,9 @@ userSchema.methods.comparePassword = function(password) {
   return bcrypt.compareSync(password, this.password); // Return comparison of login password to password in database (true or false)
 };
 
+userSchema.methods.comparePasswordsDynamo = function(password,hash) {
+  return bcrypt.compareSync(password, hash); // Return comparison of login password to password in database (true or false)
+};
+
 // Export Module/Schema
 module.exports = mongoose.model('User', userSchema);

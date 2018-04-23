@@ -26,7 +26,7 @@ export class EditRoomComponent implements OnInit {
   constructor(
     private location: Location,
     private activatedRoute: ActivatedRoute,
-    private blogService: RoomService,
+    private roomService: RoomService,
     private router: Router
   ) { }
 
@@ -43,8 +43,8 @@ export class EditRoomComponent implements OnInit {
 
     console.log(this.selectedAvail);
 
-    // Function to send blog object to backend
-    this.blogService.editRoom(this.room).subscribe(data => {
+    // Function to send room object to backend
+    this.roomService.editRoom(this.room).subscribe(data => {
       // Check if PUT request was a success or not
       if (!data.success) {
         this.messageClass = 'alert alert-danger'; // Set error bootstrap class
@@ -53,7 +53,7 @@ export class EditRoomComponent implements OnInit {
       } else {
         this.messageClass = 'alert alert-success'; // Set success bootstrap class
         this.message = data.message; // Set success message
-        // After two seconds, navigate back to blog page
+        // After two seconds, navigate back to room page
         setTimeout(() => {
           this.router.navigate(['/adminRoom']); // Navigate back to route page
         }, 2000);
@@ -68,15 +68,15 @@ export class EditRoomComponent implements OnInit {
 
   ngOnInit() {
     this.currentUrl = this.activatedRoute.snapshot.params; // When component loads, grab the id
-    // Function to GET current blog with id in params
-    this.blogService.getSingleRoom(this.currentUrl.id).subscribe(data => {
+    // Function to GET current room with id in params
+    this.roomService.getSingleRoom(this.currentUrl.id).subscribe(data => {
       // Check if GET request was success or not
       if (!data.success) {
         this.messageClass = 'alert alert-danger'; // Set bootstrap error class
         this.message = data.message; // Set error message
       } else {
-        this.room = data.room; // Save blog object for use in HTML
-        this.loading = false; // Allow loading of blog form
+        this.room = data.room; // Save room object for use in HTML
+        this.loading = false; // Allow loading of room form
       }
     });
 

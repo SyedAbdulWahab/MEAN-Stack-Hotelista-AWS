@@ -5,9 +5,9 @@ const mongoose = require('mongoose'); // Node Tool for MongoDB
 mongoose.Promise = global.Promise; // Configure Mongoose Promises
 const Schema = mongoose.Schema; // Import Schema from Mongoose
 
-// Validate Function to check blog title length
+// Validate Function to check room title length
 let titleLengthChecker = (title) => {
-    // Check if blog title exists
+    // Check if room title exists
     if (!title) {
       return false; // Return error
     } else {
