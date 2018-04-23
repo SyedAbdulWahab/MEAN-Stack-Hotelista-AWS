@@ -3,7 +3,7 @@ import { RatingModule } from 'ngx-rating';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MyAuthService } from '../../services/auth.service';
 import { RoomService } from '../../services/room.service';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-rating',
@@ -12,19 +12,19 @@ import {Router} from '@angular/router';
 })
 export class RatingComponent implements OnInit {
 
-rate;
-processing = false;
-form;
-username;
-messageClass;
-message;
-router;
+  rate;
+  processing = false;
+  form;
+  username;
+  messageClass;
+  message;
+  router;
 
   constructor(
     // private formBuilder: FormBuilder,
     private authService: MyAuthService,
     private roomService: RoomService
-  ) { 
+  ) {
     this.router = Router;
     // this.createRatingForm();
   }
@@ -51,8 +51,8 @@ router;
       } else {
         this.messageClass = 'alert alert-success'; // Return success class
         this.message = "Success!"; // Return success message
-        
-        
+
+
       }
 
       setTimeout(() => {
@@ -69,9 +69,16 @@ router;
   }
 
   ngOnInit() {
-    this.authService.getProfile().subscribe(profile => {
-      this.username = profile.user.username; // Used when creating new room posts and comments
-    });
+    var provider = localStorage.getItem('_login_provider');
+
+    if (provider == 'google' || provider == 'facebook') {
+      this.username = localStorage.getItem('name');
+    }
+    else {
+      this.authService.getProfile().subscribe(profile => {
+        this.username = profile.user.username; // Used when creating new room posts and comments
+      });
+    }
   }
 
 }

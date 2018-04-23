@@ -123,8 +123,8 @@ export class RoomComponent implements OnInit {
 
   // Function to book a room
   BookRoom(id) {
-     if (this.isBooked)
-     return;
+    if (this.isBooked)
+      return;
 
     var obj = {
       title: id,
@@ -156,9 +156,17 @@ export class RoomComponent implements OnInit {
 
   ngOnInit() {
     // Get profile username on page load
-    this.authService.getProfile().subscribe(profile => {
-      this.username = profile.user.username; // Used when creating new room posts and comments
-    });
+
+    var provider = localStorage.getItem('_login_provider');
+
+    if (provider == 'google' || provider == 'facebook') {
+      this.username = localStorage.getItem('name');
+    }
+    else {
+      this.authService.getProfile().subscribe(profile => {
+        this.username = profile.user.username; // Used when creating new room posts and comments
+      });
+    }
 
     this.getAllRooms(); // Get all rooms on component load
   }

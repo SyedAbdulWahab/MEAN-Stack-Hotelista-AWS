@@ -220,12 +220,16 @@ export class BlogComponent implements OnInit {
 
   ngOnInit() {
     // Get profile username on page load
-    this.authService.getProfile().subscribe(profile => {
-      if (profile.success) {
-        this.username = profile.user.username; // Used when creating new blog posts and comments
-      }
-      else console.error(profile.message);
-    });
+    var provider = localStorage.getItem('_login_provider');
+
+    if (provider == 'google' || provider == 'facebook') {
+      this.username = localStorage.getItem('name');
+    }
+    else {
+      this.authService.getProfile().subscribe(profile => {
+        this.username = profile.user.username; // Used when creating new room posts and comments
+      });
+    }
 
     this.getAllBlogs(); // Get all blogs on component load
   }

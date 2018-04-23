@@ -331,28 +331,33 @@ module.exports = (router) => {
                         }); // Return error
                       } else {
                         console.log("users::fetchOneByKey::success - " + JSON.stringify(data, null, 2));
-                        console.log(data.Item.password);
-
-                        // data.Item.password = bcrypt.hashSync(data.Item.password);
-                        const passValid = bcrypt.compareSync(req.body.password, data.Item.password);
-
-                        if (!passValid) {
+                        if (Object.keys(data).length === 0 && data.constructor === Object) {
                           res.json({
                             success: false,
-                            message: 'Password invalid'
+                            message: 'No such user exists'
                           }); // Return error
-
                         } else {
 
-                          res.json({
-                            success: true,
-                            message: 'Success!',
-                            token: token,
-                            user: {
-                              username: user.username
-                            }
-                          }); // Return success and token to frontend
+                          const passValid = bcrypt.compareSync(req.body.password, data.Item.password);
 
+                          if (!passValid) {
+                            res.json({
+                              success: false,
+                              message: 'Password invalid'
+                            }); // Return error
+
+                          } else {
+
+                            res.json({
+                              success: true,
+                              message: 'Success!',
+                              token: token,
+                              user: {
+                                username: user.username
+                              }
+                            }); // Return success and token to frontend
+
+                          }
                         }
                       }
                     })
