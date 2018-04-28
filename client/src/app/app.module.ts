@@ -39,6 +39,7 @@ import { DeleteReviewComponent } from './components/admin-review/delete-review/d
 import { UserComponent } from './components/user/user.component';
 import { DeleteUserComponent } from './components/user/delete-user/delete-user.component';
 import { UserService } from './services/user.service';
+import { ScripthackComponent } from './components/scripthack/scripthack.component';
 
 let providers = {
   "google": {
@@ -49,7 +50,6 @@ let providers = {
     "apiVersion": "v2.12" 
   }
 };
-
 
 @NgModule({
   declarations: [
@@ -74,7 +74,8 @@ let providers = {
     AdminReviewComponent,
     DeleteReviewComponent,
     UserComponent,
-    DeleteUserComponent
+    DeleteUserComponent,
+    ScripthackComponent
 
   ],
   imports: [

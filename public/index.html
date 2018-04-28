@@ -17,6 +17,40 @@
   <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
     crossorigin="anonymous"></script>
-<script type="text/javascript" src="inline.cd36ab212eba52bfbd37.bundle.js"></script><script type="text/javascript" src="polyfills.9a6c3ef6460a6a6178f6.bundle.js"></script><script type="text/javascript" src="vendor.17c0a01d1dd42a5e5ef2.bundle.js"></script><script type="text/javascript" src="main.20d8f31fddf9dadebe60.bundle.js"></script></body>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.19.0.min.js"></script>
+  <!-- <script>
+
+      var fileChooser = $('#file-chooser');
+      var button = $('#upload-button');
+      var results = $('#results');
+      button.click(function () {
+        console.log("Upload clicked...");
+        var file = fileChooser.prop('files')[0];
+        if (file) {
+          AWS.config.update({
+            "accessKeyId": "AKIAJDMWJ3P63NDAYSWA",
+            "secretAccessKey": "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",
+            "region": "us-west-2"
+          });
+          var s3 = new AWS.S3();
+          var params = {
+            Bucket: 'mean-hotelista',
+            Key: file.name,
+            ContentType: file.type,
+            Body: file,
+            ACL: 'public-read'
+          };
+          s3.putObject(params, function (err, res) {
+            if (err) {
+              results.innerHTML = ("Error uploading data: ", err);
+            }
+          });
+        } else {
+          results.innerHTML = 'Nothing to upload.';
+        }
+      });
+    
+    </script> -->
+<script type="text/javascript" src="inline.1a22934947274abc0171.bundle.js"></script><script type="text/javascript" src="polyfills.9a6c3ef6460a6a6178f6.bundle.js"></script><script type="text/javascript" src="vendor.17c0a01d1dd42a5e5ef2.bundle.js"></script><script type="text/javascript" src="main.d6222aeea9917d119f2e.bundle.js"></script></body>
 
 </html>

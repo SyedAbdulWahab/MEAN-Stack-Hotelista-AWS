@@ -28,7 +28,11 @@
     <div class="panel-body">
       {{ room.body }}
 
-      Price: {{room.price}}
+      Price: {{room.price}} $
+      <br>
+      <a href="https://pcq2n3e7fl.execute-api.us-west-2.amazonaws.com/prod/number?dollars={{room.price}}">
+        <button class="btn btn-default">Convert to Rupees</button>
+      </a>
     </div>
 
     <!-- Panel Footer Start -->

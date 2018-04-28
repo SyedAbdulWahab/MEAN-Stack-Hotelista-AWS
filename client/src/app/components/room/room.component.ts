@@ -19,6 +19,7 @@ export class RoomComponent implements OnInit {
   isBooked;
   newPost = false;
   roomPosts;
+  lambda = 'https://pcq2n3e7fl.execute-api.us-west-2.amazonaws.com/prod/number';
 
   constructor(
     private formBuilder: FormBuilder,

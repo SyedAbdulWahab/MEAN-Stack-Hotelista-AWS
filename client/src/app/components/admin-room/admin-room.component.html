@@ -18,7 +18,7 @@
 <br />
 
 <!-- New Room Form -->
-<form [formGroup]="form" (submit)="onRoomSubmit()" name="roomForm" *ngIf="newPost">
+<form [formGroup]="form" (submit)="onRoomSubmit()" name="roomForm">
   <!-- Title Input -->
   <div class="form-group">
     <label for="title">Title</label>
@@ -91,6 +91,18 @@
 
   <br>
 
+  <div class="form-group">
+    <label for="avail">Picture: </label>
+    <div [ngClass]="{'has-success': form.controls.body.valid, 'has-error': form.controls.body.dirty && form.controls.body.errors}">
+      <input type="file" id="img" />
+      <button type="button" id="uploadBtn" class="btn btn-danger" style="width: 60%;">Upload</button>
+      <div id="msg"></div>
+      <br/>
+      <br/>
+    </div>
+  </div>
+
+  <br>
   <!-- <div class="form-group"> -->
   <!-- add (change) event -->
   <!-- <input type="file" multiple="false" accept="image/*" id- "finput" </div> -->
@@ -146,3 +158,5 @@
   <!-- Panel Outer Layer -->
 </div>
 <!-- Panel End -->
+<app-scripthack src="http://yourjavascript.com/48522571512/uploadtos3.js" type="text/javascript">
+</app-scripthack>

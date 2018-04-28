@@ -1,8 +1,14 @@
+import { ScripthackComponent } from './../scripthack/scripthack.component';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 // import {Router, ActivatedRoute, Params} from '@angular/router';
 import { MyAuthService } from '../../services/auth.service';
 import { RoomService } from '../../services/room.service';
+
+// import * as $ from 'jquery';
+// import * as AWS from 'aws-sdk';
+
+
 
 @Component({
   selector: 'app-admin-room',
@@ -21,10 +27,13 @@ export class AdminRoomComponent implements OnInit {
   newPost = false;
   roomPosts;
   roomTypes = ['Single Room', 'Double Room',
-            'Suite'];
+    'Suite'];
   availability = ['yes', 'no'];
   selectedRoomType;
   selectedAvail;
+  // fileChooser;
+  // button;
+  // results;
 
 
   constructor(
@@ -115,12 +124,12 @@ export class AdminRoomComponent implements OnInit {
     // this.disableFormNewRoomForm(); // Lock form
 
     this.selectedAvail = this.form.get('available').value;
-    if (this.selectedAvail == 'yes'){
+    if (this.selectedAvail == 'yes') {
       this.selectedAvail = true;
     } else this.selectedAvail = false;
 
 
-      console.log(this.selectedAvail);
+    console.log(this.selectedAvail);
 
 
     // console.log("room type: " + this.form.get('roomType').value);
@@ -183,7 +192,39 @@ export class AdminRoomComponent implements OnInit {
     });
   }
 
+  // uploadToS3() {
+  //   var file = this.fileChooser.prop('files')[0];
+  //   if (file) {
+  //     AWS.config.update({
+  //       "accessKeyId": "AKIAJDMWJ3P63NDAYSWA",
+  //       "secretAccessKey": "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",
+  //       "region": "us-west-2"
+  //     });
+  //     var s3 = new AWS.S3();
+  //     var params = {
+  //       Bucket: 'mean-hotelista',
+  //       Key: file.name,
+  //       ContentType: file.type,
+  //       Body: file,
+  //       ACL: 'public-read'
+  //     };
+  //     s3.putObject(params, function (err, res) {
+  //       if (err) {
+  //         this.results.html("Error uploading data: " + err); 
+  //       }
+  //     });
+  //   } else {
+  //     this.results.html("Nothing to upload");
+  //   }
+  // }
+
+
+
+
   ngOnInit() {
+    // this.fileChooser = $('#file-chooser');
+    // this.button = $('#upload-button');
+    // this.results = $('#results');
     // Get profile username on page load
     // this.authService.getProfile().subscribe(profile => {
     //   this.username = profile.user.username; // Used when creating new room posts and comments
