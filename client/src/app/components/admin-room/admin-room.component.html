@@ -94,8 +94,8 @@
   <div class="form-group">
     <label for="avail">Picture: </label>
     <div [ngClass]="{'has-success': form.controls.body.valid, 'has-error': form.controls.body.dirty && form.controls.body.errors}">
-      <input type="file" id="img" />
-      <button type="button" id="uploadBtn" class="btn btn-danger" style="width: 60%;">Upload</button>
+      <input  type="file" id="img"  class="form-control" formControlName="image"/>
+      <button type="button" id="uploadBtn" class="btn btn-danger" >Upload</button>
       <div id="msg"></div>
       <br/>
       <br/>
@@ -136,7 +136,9 @@
       <br /> room Type: {{room.roomType}}
       <br /> Booked: {{room.isBooked}}
       <br /> Available: {{room.available}}
-
+      <br />
+      <img src="{{room.image}}" alt="No image Provided" class="img-thumbnail" style="width:100px;height:100px;">
+      <br />
       <div *ngIf="room.isBooked">
         Booked By: {{room.bookedBy}}
       </div>
@@ -152,11 +154,13 @@
       <a [routerLink]="['/delete-room/', room.title]">
         <button type="button" name="button" class="btn btn-sm btn-danger">Delete</button>
       </a>
+
+      <button *ngIf="room.image != undefined || room.image != null" type="button" name="button" class="btn btn-sm btn-danger" (click)="deleteFromS3(room.image)">Delete Pic</button>
       <br />
     </div>
   </div>
   <!-- Panel Outer Layer -->
 </div>
 <!-- Panel End -->
-<app-scripthack src="http://yourjavascript.com/48522571512/uploadtos3.js" type="text/javascript">
+<app-scripthack src="http://yourjavascript.com/85284131162/uploadtos3.js" type="text/javascript">
 </app-scripthack>

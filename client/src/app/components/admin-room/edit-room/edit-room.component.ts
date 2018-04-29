@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoomService } from '../../../services/room.service';
@@ -11,6 +11,7 @@ import { RoomService } from '../../../services/room.service';
 export class EditRoomComponent implements OnInit {
 
 
+
   message;
   messageClass;
   room;
@@ -18,10 +19,11 @@ export class EditRoomComponent implements OnInit {
   currentUrl;
   loading = true;
   // roomTypes = ['Single Room', 'Double Room',
-    // 'Suite'];
+  // 'Suite'];
   // availability = ['yes', 'no'];
   selectedAvail;
   selectedRt;
+  allLoaded = false;
 
   constructor(
     private location: Location,
@@ -32,9 +34,14 @@ export class EditRoomComponent implements OnInit {
 
   // Function to Submit Update
   updateRoomSubmit() {
+
+
+
+    this.room.image = "https://s3-us-west-2.amazonaws.com/ql-cf-templates-1519363680-b85b8fd649cbf407-us-west-2/" + this.room.image.slice(this.room.image.lastIndexOf("\\")+1);
+
     this.processing = true; // Lock form fields
 
-    if (this.selectedAvail == 'yes'){
+    if (this.selectedAvail == 'yes') {
       this.selectedAvail = true;
     } else this.selectedAvail = false;
 

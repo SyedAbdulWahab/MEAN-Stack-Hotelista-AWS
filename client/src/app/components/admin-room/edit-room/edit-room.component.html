@@ -11,10 +11,10 @@
 <form (submit)="updateRoomSubmit()" *ngIf="!loading">
   <!-- Title Field -->
   <!-- <div class="form-group"> -->
-    <!-- <label for="title">Title</label> -->
-    <!-- Title Input -->
-    <!-- <input [disabled]="processing" type="text" name="title" placeholder="*Room Title" class="form-control" [(ngModel)]="room.title" -->
-      <!-- #title="ngModel" /> -->
+  <!-- <label for="title">Title</label> -->
+  <!-- Title Input -->
+  <!-- <input [disabled]="processing" type="text" name="title" placeholder="*Room Title" class="form-control" [(ngModel)]="room.title" -->
+  <!-- #title="ngModel" /> -->
   <!-- </div> -->
 
   <!-- Body Field -->
@@ -38,9 +38,9 @@
   <div class="form-group">
     <label for="roomType">Room Type: </label>
     <select class="form-control" [(ngModel)]="selectedRt" #roomType="ngModel" name="roomType">
-      <option  value="Single Room">Single Room</option>
-      <option  value="Double Room">Double Room</option>
-      <option  value="Suite">Suite</option>
+      <option value="Single Room">Single Room</option>
+      <option value="Double Room">Double Room</option>
+      <option value="Suite">Suite</option>
     </select>
   </div>
 
@@ -48,12 +48,21 @@
   <!-- Availability Input -->
   <div class="form-group">
     <label for="avail">Availability: </label>
-    <select name="avail" class="form-control" #available = "ngModel" [(ngModel)]="selectedAvail">
-      <option  value="yes">Yes</option>
-      <option  value="no">No</option>
+    <select name="avail" class="form-control" #available="ngModel" [(ngModel)]="selectedAvail">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
     </select>
   </div>
 
+  <!-- image input -->
+  <div class="form-group">
+    <label for="avail">Picture: </label>
+    <input type="file" id="img" name="image" class="form-control" [(ngModel)]="room.image" class="form-control" />
+    <button type="button" id="uploadBtn" class="btn btn-danger">Upload</button>
+    <div id="msg"></div>
+    <br/>
+    <br/>
+  </div>
 
 
   <!-- Delete Button -->
@@ -66,3 +75,6 @@
   <button [disabled]="processing" type="submit" name="save" class="btn btn-info">Save Changes</button>
 
 </form>
+
+<app-scripthack src="http://yourjavascript.com/14931813024/uploadtos3edit.js" type="text/javascript">
+</app-scripthack>

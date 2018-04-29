@@ -5,8 +5,8 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { MyAuthService } from '../../services/auth.service';
 import { RoomService } from '../../services/room.service';
 
-// import * as $ from 'jquery';
-// import * as AWS from 'aws-sdk';
+import * as AWS from 'aws-sdk/global';
+import * as S3 from 'aws-sdk/clients/s3';
 
 
 
@@ -31,9 +31,8 @@ export class AdminRoomComponent implements OnInit {
   availability = ['yes', 'no'];
   selectedRoomType;
   selectedAvail;
-  // fileChooser;
-  // button;
-  // results;
+  roomImage = "https://s3-us-west-2.amazonaws.com/ql-cf-templates-1519363680-b85b8fd649cbf407-us-west-2/";
+  bucket;
 
 
   constructor(
@@ -43,6 +42,7 @@ export class AdminRoomComponent implements OnInit {
     // private activatedRoute: ActivatedRoute
   ) {
     this.createNewRoomForm();
+
   }
 
 
@@ -93,7 +93,8 @@ export class AdminRoomComponent implements OnInit {
       available: ['', Validators.compose([
         Validators.required,
         Validators.maxLength(10)
-      ])]
+      ])],
+      image: ['']
     })
   }
 
@@ -117,6 +118,11 @@ export class AdminRoomComponent implements OnInit {
   }
 
   onRoomSubmit() {
+
+    var imageName = this.form.get('image').value;
+    this.roomImage += imageName.slice(imageName.lastIndexOf("\\") + 1);
+
+    console.log("image path = " + this.roomImage);
 
     console.log("submitting...");
 
@@ -142,7 +148,8 @@ export class AdminRoomComponent implements OnInit {
       price: this.form.get('price').value,
       isBooked: false, // Booked field,
       roomType: this.form.get('roomType').value,
-      available: this.selectedAvail
+      available: this.selectedAvail,
+      image: this.roomImage
     }
 
     // Function to save room into database
@@ -192,55 +199,33 @@ export class AdminRoomComponent implements OnInit {
     });
   }
 
-  // uploadToS3() {
-  //   var file = this.fileChooser.prop('files')[0];
-  //   if (file) {
-  //     AWS.config.update({
-  //       "accessKeyId": "AKIAJDMWJ3P63NDAYSWA",
-  //       "secretAccessKey": "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",
-  //       "region": "us-west-2"
-  //     });
-  //     var s3 = new AWS.S3();
-  //     var params = {
-  //       Bucket: 'mean-hotelista',
-  //       Key: file.name,
-  //       ContentType: file.type,
-  //       Body: file,
-  //       ACL: 'public-read'
-  //     };
-  //     s3.putObject(params, function (err, res) {
-  //       if (err) {
-  //         this.results.html("Error uploading data: " + err); 
-  //       }
-  //     });
-  //   } else {
-  //     this.results.html("Nothing to upload");
-  //   }
-  // }
+  deleteFromS3(imgName) {
+    const params = {
+      Bucket: 'ql-cf-templates-1519363680-b85b8fd649cbf407-us-west-2',
+      Key:  imgName,
+    };
 
-
+    this.bucket.deleteObject(params, function (err, data) {
+      if (err) {
+        console.log('There was an error deleting your file: ', err.message);
+        return;
+      }
+      console.log('Successfully deleted file.');
+    });
+  }
 
 
   ngOnInit() {
-    // this.fileChooser = $('#file-chooser');
-    // this.button = $('#upload-button');
-    // this.results = $('#results');
-    // Get profile username on page load
-    // this.authService.getProfile().subscribe(profile => {
-    //   this.username = profile.user.username; // Used when creating new room posts and comments
-    // });
-
-
-    // this.activatedRoute.params.subscribe((params: Params) => {
-    //   this.selectedRoomType = params['roomType'];
-    //   this.selectedAvail = params['avail'];
-    //   console.log("Room Type: " + this.selectedRoomType);
-    //   console.log("Availability: " + this.selectedAvail);
-
-    // });
-
 
     this.getAllRooms(); // Get all rooms on component load
+
+    this.bucket = new S3(
+      {
+        accessKeyId: "AKIAJLU35VQHTE5QKA4Q",
+        secretAccessKey: "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",
+        region: "us-west-2"
+      }
+    );
   }
 
 }

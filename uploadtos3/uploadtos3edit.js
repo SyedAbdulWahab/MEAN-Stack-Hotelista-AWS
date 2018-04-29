@@ -1,3 +1,6 @@
+alert("waiting");
+setTimeout(function(){
+    //do what you need here
 
     var image = document.getElementById('img');
     var uploadBtn = document.getElementById('uploadBtn');
@@ -29,3 +32,5 @@
             msg.innerHTML = 'Nothing to upload.';
         }
     }, false);
+}, 3000);
+alert("executing");

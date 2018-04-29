@@ -65,7 +65,8 @@ module.exports = (router) => {
                 price: req.body.price, // Body field
                 isBooked: false,
                 roomType: req.body.roomType,
-                available: req.body.available
+                available: req.body.available,
+
               });
               // Save room into database
               room.save((err) => {
@@ -94,7 +95,8 @@ module.exports = (router) => {
                     price: room.price, // Body field
                     isBooked: false,
                     roomType: room.roomType,
-                    available: room.available
+                    available: room.available,
+                    image: req.body.image
                   }
 
 
@@ -482,12 +484,13 @@ module.exports = (router) => {
         Key: {
           "title": req.body.title
         },
-        UpdateExpression: "set body = :b, price=:p, available=:a, roomType=:rt",
+        UpdateExpression: "set body = :b, price=:p, available=:a, roomType=:rt, image =:im",
         ExpressionAttributeValues: {
           ":b": req.body.body,
           ":p": req.body.price,
           ":a": req.body.available,
           ":rt": req.body.roomType,
+          ":im": req.body.image
 
         },
         ReturnValues: "UPDATED_NEW"
